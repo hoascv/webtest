@@ -1,0 +1,31 @@
+{
+	"server": [{
+			"server_name": "HSWEBAPP",
+			"server": "https://dev.hswebapp.com",
+			"server_port": "testPort",
+			"http_method": "GET",
+			"service": "/api/templog?sensor_type=AM2302",
+			"certificate": "",
+			"sample_folder": "",
+			"user": "hoas",
+			"password": "pass"},
+
+		{
+			"server_name": "HStestDump",
+			"server": "http://ptsv2.com",
+			"server_port": "testPort",
+			"http_method": "GET",
+			"service": "/t/hstest/post",
+			"certificate": "",
+			"sample_folder": "",
+			"user": "hoas",
+			"password": "pass"
+
+		}
+
+
+	],
+
+"sample_folder": "./data"
+
+}
