@@ -30,7 +30,6 @@ class AESHelper(object):
     def crypto_info(self):
         return (self.key,self.iv)
 
-
     @staticmethod
     def _unpad(s):
         return s[:-ord(s[len(s)-1:])]
