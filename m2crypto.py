@@ -11,6 +11,12 @@
 import OpenSSL
 
 
+
+import Crypto
+from Crypto.PublicKey import RSA
+from Crypto import Random
+import ast
+
 cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
                                        open('./certificate/DATS001.crt').read())
 try:
@@ -24,5 +30,11 @@ print(OpenSSL.crypto.dump_publickey(OpenSSL.crypto.FILETYPE_PEM,cert.get_pubkey(
 
 
 
+random_generator = Random.new().read
+key = RSA.generate(1024, random_generator) #generate pub and priv key
+
+
+publickey = key.publickey()
+print('public key: {}'.format(publickey))
 
 
