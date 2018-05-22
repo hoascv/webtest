@@ -1,17 +1,16 @@
 import json
 from pprint import pprint
-import os,fnmatch
+import os, fnmatch
 import requests
 import webbrowser
 import time
 import bs4
 
 
-
 def report():
     print("entering report")
     with open('./logs/report.html') as report_file:
-        html_file =report_file.read()
+        html_file = report_file.read()
         soup = bs4.BeautifulSoup(html_file,'html.parser')
 
         new_element = soup.new_tag("link", rel="icon", type="image/png", href="img/tor.png")
@@ -50,26 +49,27 @@ def report():
     webbrowser.open_new_tab(filename)
 
 
-
-def  send_data(data):
-    start=time.time();
+def send_data(data):
+    start = time.time();
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     my_request = requests.post(config['server'][0]['server']+config['server'][0]['service'], json=data,
-                           headers=headers)
-    finish=time.time() - start
+                               headers=headers)
+    finish = time.time() - start
 
-    if (my_request.status_code == 201 or my_request.status_code == 409):
+    if my_request.status_code == 201 or my_request.status_code == 409:
         pass
 
 
     # print(my_request.status_code)
-    #pprint(my_request.json())
+    # pprint(my_request.json())
 
-    print('status {} time elapsed {} in ms  total time: {}'.format( my_request.status_code,round(my_request.elapsed.total_seconds()*1000,2), round(finish*1000,2)))
+    print('status {} time elapsed {} in ms  total time: {}'.format(my_request.status_code,
+                                                                   round(my_request.elapsed.total_seconds()*1000, 2),
+                                                                   round(finish*1000, 2)))
 
-    #elapsed measures the time between sending the request and finishing parsing the response headers,
-    #  not until the full response has been transfered.
+    # elapsed measures the time between sending the request and finishing parsing the response headers,
+    # not until the full response has been transfered.
 
 
 
