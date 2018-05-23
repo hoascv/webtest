@@ -9,6 +9,8 @@ from Crypto.Hash import SHA512, SHA384, SHA256, SHA, MD5
 
 
 
+
+
 class RSAHelper(object):
     #def __init__(self, server_certificate, client_key):
     #    self.server_certificate = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
@@ -26,7 +28,7 @@ class RSAHelper(object):
         with open(client_key_path) as private_key:  # testing not working for private key from pem format
             self.temp_client_key = OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, private_key.read(), str.encode(pfx_password))
             self.client_key = OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_ASN1, self.temp_client_key)
-            print(base64.b64encode(self.client_key))
+            #print(base64.b64encode(self.client_key))
 
         with tempfile.NamedTemporaryFile(suffix='.pem', delete=False) as t_pem:  #pfx format
             f_pem = open(t_pem.name, 'wb')
@@ -49,17 +51,28 @@ class RSAHelper(object):
         primeP = keyPriv.p
         primeQ = keyPriv.q
 
-        self.private_key = RSA.construct((modulusN, pubExpE, priExpD, primeP, primeQ))
+        private_key1 = RSA.construct((modulusN, pubExpE, priExpD, primeP, primeQ))
 
-    def encrypt_info(self, key, IV):
-        return rsa.encrypt(key, self.recipient_public_key), rsa.encrypt(key, self.recipient_public_key)
+        self.private_key = rsa.PrivateKey.load_pkcs1(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_ASN1, p12.get_privatekey()), format='DER')
+
+
+
+
+
+
+
+    def encrypt_info_key(self, key):
+        return rsa.encrypt(key, self.recipient_public_key)
+
+    def encrypt_info_iv(self, iv):
+        return rsa.encrypt(iv, self.recipient_public_key)
 
     def signatures(self, message):
 
-        signer = PKCS1_v1_5.new(self.private_key)
-        digest = SHA256.new()
-        digest.update(message)
-        return signer.sign(digest)
-        #return rsa.sign(message, self.client_key, 'SHA-256')
+        #signer = PKCS1_v1_5.new(self.private_key)
+        #digest = SHA.new()
+        #digest.update(message)
+        #return signer.sign(digest)
+        return rsa.sign(message, self.private_key, 'SHA-256')
 
 

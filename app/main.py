@@ -10,6 +10,8 @@ import bs4
 from app.RSAHelper import RSAHelper
 from app.AESHelper import AESHelper
 import base64
+from nacl.encoding import Base64Encoder
+from cryptography.hazmat.primitives import serialization
 
 
 def encrypt_data(file,filename):
@@ -18,15 +20,44 @@ def encrypt_data(file,filename):
 
     enc_key = "HSKEY00000000000".encode("utf-8")
 
-    rsa_helper = RSAHelper(config['server'][2]['pfx_certificate'], '', config['server'][2]['server_certificate'],config['server'][2]['client_key'])
+    rsa_helper = RSAHelper(config['server'][2]['pfx_certificate'], '', config['server'][2]['server_certificate'], config['server'][2]['client_key'])
     aes_helper = AESHelper(enc_key)
-    key_iv= rsa_helper.encrypt_info(aes_helper.key, aes_helper.iv)
+    key_info = rsa_helper.encrypt_info_key(aes_helper.key)
+    iv_info =  rsa_helper.encrypt_info_key(aes_helper.iv)
     encrypted_string = aes_helper.encrypt(file)
 
-    print(len(encrypted_string))
-    print(rsa_helper.signatures(encrypted_string))
-    
 
+
+    #print(base64.b64encode(key_info.decode("utf-8")))
+
+    signature=rsa_helper.signatures(encrypted_string)
+
+    test = base64.b64encode(signature)
+    print(test)
+
+    #print(key_info)
+    #print(type(key_info))
+
+    payload = {}
+
+    payload["DatsId"]="0010F34DE3FA"
+    payload["EncryptedKeyString"] =
+    payload["VsuId"] = "a44e311e1bcc"
+    #payload["RecordTime"] = "2018-04-25T12:46:07.0204193Z"
+    #payload["EncryptedString"] = encrypted_string
+    #payload["SignedDataString"] = base64.b64encode(signature)
+    payload["FileName"] = filename
+    #payload["EncryptedIVString"] = iv_info
+
+
+
+
+
+   # with open('data.txt', 'w') as outfile:
+  #     json.dump(payload, outfile)
+
+
+    return json.dumps(payload)
 
 
 
@@ -34,7 +65,7 @@ def report():
     print("entering report")
     with open('./logs/report.html') as report_file:
         html_file = report_file.read()
-        soup = bs4.BeautifulSoup(html_file,'html.parser')
+        soup = bs4.BeautifulSoup(html_file, 'html.parser')
 
         new_element = soup.new_tag("link", rel="icon", type="image/png", href="img/tor.png")
 
@@ -50,7 +81,7 @@ def send_data(data):
     start = time.time();
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-    my_request = requests.post(config['server'][1]['server']+config['server'][1]['service'], json=data,
+    my_request = requests.post(config['server'][3]['server']+config['server'][3]['service'], json=data,
                                headers=headers)
     finish = time.time() - start
 
@@ -75,22 +106,20 @@ for file in data_files:
         encrypt_data(data_file.read(), file)
 
         #send_data(json.load(data_file))
+        send_data(encrypt_data(data_file.read(), file))
 
-report()
-
-
-
+#report()
 
 
-try:
-    pass
+
+
+
+#try:
+#    pass
         #except Exception as e:
         #app.logger.error('Error reading bd : {}'.format(e))
-except:
-    pass
+#except:
+#    pass
 
-finally:
-    pass
-
-
-
+#finally:
+#    pass
