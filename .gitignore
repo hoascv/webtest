@@ -1,6 +1,9 @@
 certificate/
 venv/
 hsvenv/
+app/__pycache__/
+app/certificates/
+__pycache__/
 
 
 ### Intellij ###
@@ -45,16 +48,11 @@ https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 # JIRA plugin
 atlassian-ide-plugin.xml
 
-# Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-fabric.properties
+
+
 
 ### Intellij Patch ###
 # Comment Reason: 
-https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
-
 # *.iml
 # modules.xml
-shareimprove this answer
+

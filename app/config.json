@@ -1,0 +1,51 @@
+{
+	"server": [{
+			"id":0,
+			"server_name": "HSWEBAPP",
+			"server": "https://dev.hswebapp.com",
+			"server_port": "testPort",
+			"http_method": "GET",
+			"service": "/api/templog?sensor_type=AM2302",
+			"certificate": "./certificates/DATS001.crt",
+			"sample_folder": "",
+			"user": "hoas",
+			"password": "pass"},
+
+		{	"id":1,
+			"server_name": "HStestDump",
+			"server": "http://ptsv2.com",
+			"server_port": "testPort",
+			"http_method": "GET",
+			"service": "/t/hstest/post",
+			"certificate": "",
+			"sample_folder": "",
+			"user": "hoas",
+			"password": "pass"
+
+		},
+		{	"id":2,
+		    "server_name": "DEP1",
+			"server": "172.19.11.126",
+			"server_port": "8080",
+			"http_method": "POST",
+			"service": "/Features",
+			"client_key": "./certificates/NVOTest.pfx.key.pem",
+			"server_certificate":"./certificates/NVOTest.pfx.cer.pem",
+			"pfx_certificate":"./certificates/NVOTest.pfx",
+			"pfx_password":"",
+			"sample_folder": "",
+			"user": "demo",
+			"password": "demo"
+
+
+
+
+
+		}
+
+
+	],
+
+"features_sample_folder": "./features_test_data"
+
+}

@@ -3,20 +3,27 @@ import hashlib
 from Crypto import Random
 from Crypto.Cipher import AES
 
+
 class AESHelper(object):
 
     def __init__(self, key):
         self.bs = 32
-        self.key = hashlib.sha256(key.encode()).digest()
+        #self.key = hashlib.sha256(key.encode()).digest() #FIXED LENGHT MUST be 16, 24 or 32 bytes long
+        self.key = key
         self.iv = Random.new().read(AES.block_size)
 
     def encrypt(self, raw):
         raw = self._pad(raw)
-        print('raw {}'.format(raw))
+        #print('raw {}'.format(raw))
 
         cipher = AES.new(self.key, AES.MODE_CBC, self.iv)
 
-        return base64.b64encode(self.iv + cipher.encrypt(raw))
+        msgBytePad = bytes(raw, 'utf-8')
+        length = 16 - (len(msgBytePad) % 16)
+        msgBytePad += bytes([length]) * length
+        return cipher.encrypt(msgBytePad)
+
+        #return base64.b64encode(self.iv + cipher.encrypt(raw))
 
     def decrypt(self, enc):
         enc = base64.b64decode(enc)

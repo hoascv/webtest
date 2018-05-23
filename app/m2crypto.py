@@ -11,14 +11,10 @@
 import OpenSSL
 
 
-
-import Crypto
-from Crypto.PublicKey import RSA
-from Crypto import Random
 import ast
 
 cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
-                                       open('./certificate/DATS001.crt').read())
+                                       open('./certificates/DATS001.crt').read())
 try:
     #OpenSSL.crypto.verify(cert, signature, data, 'sha256')
     print ("Signature verified OK")
@@ -36,5 +32,7 @@ key = RSA.generate(1024, random_generator) #generate pub and priv key
 
 publickey = key.publickey()
 print('public key: {}'.format(publickey))
+
+
 
 
