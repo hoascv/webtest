@@ -13,14 +13,11 @@ class AESHelper(object):
         self.iv = Random.new().read(AES.block_size)
 
     def encrypt(self, raw):
-        raw = self._pad(raw)
-        #print('raw {}'.format(raw))
-
         cipher = AES.new(self.key, AES.MODE_CBC, self.iv)
-
         msgBytePad = bytes(raw, 'utf-8')
         length = 16 - (len(msgBytePad) % 16)
         msgBytePad += bytes([length]) * length
+
         return cipher.encrypt(msgBytePad)
 
         #return base64.b64encode(self.iv + cipher.encrypt(raw))
