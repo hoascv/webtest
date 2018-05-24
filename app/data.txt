@@ -1,1 +1,1 @@
-{"SignedDataString": 
+["DatsId", "VsuId", "RecordTime", "EncryptedKeyString", "FileName", "SignedDataString"]
