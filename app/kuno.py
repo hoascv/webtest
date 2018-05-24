@@ -44,7 +44,8 @@ private_key = RSA.construct((modulusN, pubExpE, priExpD, primeP, primeQ))
 
 pubkey = private_key.publickey().exportKey('PEM')
 
-key = b'Sixteen byte key'
+#key = b'Sixteen byte key'
+key = "HSKEY00000000000".encode("utf-8")
 iv = b'Sixteen byte key'
 print("Key:")
 print(key)
@@ -91,9 +92,4 @@ encode = base64.b64encode(signature)
 print("Encoded Signature: ")
 print(encode)
 
-data = {}
-
-data["message"]= msgb64
-
-json.dumps(data)
-
+print('tamanho: {}'.format(len(msgb64)))

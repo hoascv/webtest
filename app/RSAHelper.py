@@ -51,9 +51,9 @@ class RSAHelper(object):
         primeP = keyPriv.p
         primeQ = keyPriv.q
 
-        private_key1 = RSA.construct((modulusN, pubExpE, priExpD, primeP, primeQ))
+        self.private_key = RSA.construct((modulusN, pubExpE, priExpD, primeP, primeQ))
 
-        self.private_key = rsa.PrivateKey.load_pkcs1(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_ASN1, p12.get_privatekey()), format='DER')
+       # self.private_key = rsa.PrivateKey.load_pkcs1(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_ASN1, p12.get_privatekey()), format='DER')
 
 
 
@@ -69,10 +69,8 @@ class RSAHelper(object):
 
     def signatures(self, message):
 
-        #signer = PKCS1_v1_5.new(self.private_key)
-        #digest = SHA.new()
-        #digest.update(message)
-        #return signer.sign(digest)
-        return rsa.sign(message, self.private_key, 'SHA-256')
-
-
+        signer = PKCS1_v1_5.new(self.private_key)
+        digest = SHA.new()
+        digest.update(message)
+        return signer.sign(digest)
+        #return rsa.sign(message, self.private_key, 'SHA-1')

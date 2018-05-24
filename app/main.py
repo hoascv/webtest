@@ -1,5 +1,4 @@
 
-
 import json
 from pprint import pprint
 import os, fnmatch
@@ -23,41 +22,34 @@ def encrypt_data(file,filename):
     rsa_helper = RSAHelper(config['server'][2]['pfx_certificate'], '', config['server'][2]['server_certificate'], config['server'][2]['client_key'])
     aes_helper = AESHelper(enc_key)
     key_info = rsa_helper.encrypt_info_key(aes_helper.key)
-    iv_info =  rsa_helper.encrypt_info_key(aes_helper.iv)
+    iv_info = rsa_helper.encrypt_info_key(aes_helper.iv)
     encrypted_string = aes_helper.encrypt(file)
 
-
-
-    #print(base64.b64encode(key_info.decode("utf-8")))
-
-    signature=rsa_helper.signatures(encrypted_string)
-
-    test = base64.b64encode(signature)
-    print(test)
-
-    #print(key_info)
-    #print(type(key_info))
+    signature = rsa_helper.signatures(encrypted_string)
 
     payload = {}
 
-    payload["DatsId"]="0010F34DE3FA"
-    payload["EncryptedKeyString"] =
+    payload["DatsId"] = "a44e311e1bcc"
+    payload["EncryptedKeyString"] = base64.b64encode(key_info).decode('utf-8')
     payload["VsuId"] = "a44e311e1bcc"
-    #payload["RecordTime"] = "2018-04-25T12:46:07.0204193Z"
-    #payload["EncryptedString"] = encrypted_string
-    #payload["SignedDataString"] = base64.b64encode(signature)
+    payload["RecordTime"] = "2018-04-25T12:46:07.0204193Z"
+    payload["EncryptedString"] = base64.b64encode(encrypted_string).decode('utf-8')
+    payload["SignedDataString"] = base64.b64encode(signature).decode('utf-8')
     payload["FileName"] = filename
-    #payload["EncryptedIVString"] = iv_info
+    payload["EncryptedIVString"] = base64.b64encode(iv_info).decode('utf-8')
 
 
 
 
 
-   # with open('data.txt', 'w') as outfile:
-  #     json.dump(payload, outfile)
+    with open('data.txt', 'w') as outfile:
+        json.dump((payload), outfile)
 
+    with open('data.txt') as config_file:
+        new_json = json.load(config_file)
 
-    return json.dumps(payload)
+    #return json.dumps(payload)
+    return new_json
 
 
 
@@ -81,8 +73,9 @@ def send_data(data):
     start = time.time();
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-    my_request = requests.post(config['server'][3]['server']+config['server'][3]['service'], json=data,
-                               headers=headers)
+    headers = {'Authorization': 'Basic ZGVtbzpkZW1v'}
+    my_request = requests.post(config['server'][2]['server']+config['server'][2]['service'], json=data,
+                               headers=headers,verify=False)
     finish = time.time() - start
 
     if my_request.status_code == 201 or my_request.status_code == 409:
@@ -94,7 +87,7 @@ def send_data(data):
     # elapsed measures the time between sending the request and finishing parsing the response headers,
     # not until the full response has been transferred.
 
-
+    print("Response from server: {}".format(my_request.text))
 
 
 with open('config.json') as config_file:
