@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <h1>{{ data.report }}</h1>
+</head>
+<body>
+<table class="table table-hover">
+         <thead>
+            <tr>
+               <th>service</th>
+               <th>time</th>
+
+            </tr>
+         </thead>
+
+         <tbody>
+            {% for row in data.server %}
+               <tr>
+                  <td>{{ row.name }}</td>
+                  <td>{{ row.idade }}</td>
+
+               </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+
+</body>
+</html>

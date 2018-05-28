@@ -4,7 +4,7 @@ def custom_function(a):
     return a.replace('o', 'ay')
 
 
-with open('report.html') as report_file:
+with open('template.html') as report_file:
     template = report_file.read()
 
 
