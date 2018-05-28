@@ -9,8 +9,15 @@ import json
 #plain_text = decryption_suite.decrypt(cipher_text)
 #pycrypto
 
+import json
+import requests
+
+data1 ={}
 
 
-pythonDictionary = {'name':'Bob', 'age':44, 'isEmployed':True}
-dictionaryToJson = json.dumps(pythonDictionary)
-print (dictionaryToJson)
+data1['a']='abc'
+data1['b'] = 'kuno'
+data = json.dumps(data1)
+
+headers = {'Content-type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Basic ZGVtbzpkZW1v'}
+my_request = requests.post("http://ptsv2.com/t/hstest/post", json=data,headers=headers)

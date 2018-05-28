@@ -77,7 +77,7 @@ cipher = AES.new(key, AES.MODE_CBC, iv)
 
 F = open("./features_test_data/183da23022e4_20150507-083000.csv", "r")
 fileData = F.read()
-print(fileData)
+#print(fileData)
 msgBytePad = bytes(fileData, 'utf-8')
 length = 16 - (len(msgBytePad) % 16)
 msgBytePad += bytes([length]) * length
@@ -87,9 +87,22 @@ msgb64 = base64.b64encode(msg)
 print("Encoded message: ")
 print(msgb64)
 
-signature = rsa.sign(msg, private_key, 'SHA-256')
+print("lENGHt  {}".format(len(fileData)))
+
+signature = rsa.sign(msg, private_key, 'SHA-1')
 encode = base64.b64encode(signature)
 print("Encoded Signature: ")
 print(encode)
 
-print('tamanho: {}'.format(len(msgb64)))
+payload = {}
+payload["DatsId"] = "a44e311e1bcc"
+payload["EncryptedKeyString"] = encryptedKey.decode('utf-8')
+payload["VsuId"] = "a44e311e1bcc"
+payload["RecordTime"] = "2018-04-25T12:46:07.0204193Z"
+payload["EncryptedString"] = msgb64.decode('utf-8')
+payload["SignedDataString"] = base64.b64encode(signature).decode('utf-8')
+payload["FileName"] = "183da23022e4_20150507-083000.csv"
+payload["EncryptedIVString"] = encryptedIV.decode('utf-8')
+
+with open('data.txt', 'w') as outfile:
+    json.dump((payload), outfile)
