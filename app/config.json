@@ -24,11 +24,13 @@
 
 		},
 		{	"id":2,
-		    "server_name": "DEP1",
+		    "server_name": "DEP1(DEV-VIRTUAL)",
 			"server": "https://172.19.11.139",
 			"server_port": "3434",
 			"http_method": "POST",
-			"service": ":3434/Features",
+			"feature_service": ":3434/Features",
+			"vsu_health_service":":3434/VsuHealth",
+			"dats_health_service":":3434/DatsHealth",
 			"client_key": "./certificates/NVOTest.pfx.key.pem",
 			"server_certificate":"./certificates/NVOTest.pfx.cer.pem",
 			"pfx_certificate":"./certificates/NVOTest.pfx",
@@ -56,13 +58,32 @@
 
 
 
+		},
+		{	"id":4,
+		    "server_name": "DEP3(DEV1)",
+			"server": "https://172.18.21.5",
+			"server_port": "3434",
+			"http_method": "POST",
+			"feature_service": ":3434/Features",
+			"vsu_health_service":":3434/VsuHealth",
+			"dats_health_service":":3434/DatsHealth",
+			"client_key": "./certificates/NVOTest.pfx.key.pem",
+			"server_certificate":"./certificates/NVOTest.pfx.cer.pem",
+			"pfx_certificate":"./certificates/NVOTest.pfx",
+			"pfx_password":"",
+			"sample_folder": "",
+			"user": "demo",
+			"password": "demo"
+
 		}
+
+
 
 
 	],
 
 "features_sample_folder": "./features_test_data",
-"health_sample_folder": "./features_test_data"
+"health_sample_folder": "./health_test_data"
 
 
 }

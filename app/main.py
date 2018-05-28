@@ -37,7 +37,7 @@ def encrypt_data(filename):
     payload["FileName"] = filename.split('/')[-1]
     payload["EncryptedIVString"] = base64.b64encode(iv_info).decode('utf-8')
 
-    print(certifi.where())
+    #print(certifi.where()) windows certificates
 
     with open('data.txt', 'w') as outfile:
         json.dump((payload), outfile)
@@ -65,12 +65,12 @@ def report():
     webbrowser.open_new_tab(filename)
 
 
-def send_data(data):
+def send_data(data,service):
     start = time.time()
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Basic ZGVtbzpkZW1v'}
 
-    my_request = requests.post(config['server'][2]['server']+config['server'][2]['service'], json=data,
+    my_request = requests.post(service, json=data,
                                headers=headers, verify=False)
 
     finish = time.time() - start
@@ -92,13 +92,28 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 
 data_files = fnmatch.filter(os.listdir(config['features_sample_folder']), '*.csv')
-heath_files = fnmatch.filter(os.listdir(config['health_sample_folder']), '*.csv')
+vsu_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), 'vsu_*.csv')
+dats_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), 'dats_*.csv')
 
 for file in data_files:
     with open(config['features_sample_folder']+'/'+file) as data_file:
-        send_data(encrypt_data(data_file.name))
+        pass
+        #send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['feature_service'])
 
-report()
+for file in vsu_health_files:
+    with open(config['health_sample_folder'] + '/' + file) as data_file:
+        send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['vsu_health_service'])
+        print(data_file.name)
+
+for file in dats_health_files:
+    with open(config['health_sample_folder'] + '/' + file) as data_file:
+        send_data(encrypt_data(data_file.name), config['server'][4]['server']+config['server'][4]['dats_health_service'])
+        print(data_file.name)
+
+
+
+
+#report()
 
 
 
