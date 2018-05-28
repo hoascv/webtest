@@ -1,8 +1,6 @@
-
-
 import json
-from pprint import pprint
-import os, fnmatch
+import os
+import fnmatch
 import requests
 import webbrowser
 import time
@@ -10,48 +8,45 @@ import bs4
 from app.RSAHelper import RSAHelper
 from app.AESHelper import AESHelper
 import base64
-from nacl.encoding import Base64Encoder
-from cryptography.hazmat.primitives import serialization
+import certifi
+import ssl
 
 
-def encrypt_data(file,filename):
-    #TODO create a json file
-    #TODO encrypt the key and IV
+def encrypt_data(filename):
 
     enc_key = "HSKEY00000000000".encode("utf-8")
-
     rsa_helper = RSAHelper(config['server'][2]['pfx_certificate'], '', config['server'][2]['server_certificate'], config['server'][2]['client_key'])
     aes_helper = AESHelper(enc_key)
     key_info = rsa_helper.encrypt_info_key(aes_helper.key)
     iv_info = rsa_helper.encrypt_info_key(aes_helper.iv)
-    encrypted_string = aes_helper.encrypt(file)
+
+    with open(filename, "r") as file_data:
+        content = file_data.read()
+
+    encrypted_string = aes_helper.encrypt(content)
 
     signature = rsa_helper.signatures(encrypted_string)
 
     payload = {}
-
     payload["DatsId"] = "a44e311e1bcc"
     payload["EncryptedKeyString"] = base64.b64encode(key_info).decode('utf-8')
     payload["VsuId"] = "a44e311e1bcc"
     payload["RecordTime"] = "2018-04-25T12:46:07.0204193Z"
     payload["EncryptedString"] = base64.b64encode(encrypted_string).decode('utf-8')
     payload["SignedDataString"] = base64.b64encode(signature).decode('utf-8')
-    payload["FileName"] = filename
+    payload["FileName"] = filename.split('/')[-1]
     payload["EncryptedIVString"] = base64.b64encode(iv_info).decode('utf-8')
 
-
-
-
+    print(certifi.where())
 
     with open('data.txt', 'w') as outfile:
         json.dump((payload), outfile)
 
-    with open('data.txt') as config_file:
-        new_json = json.load(config_file)
+    #with open('data.txt') as config_file:
+    #    new_json = json.load(config_file)
 
     #return json.dumps(payload)
-    return new_json
-
+    return payload
 
 
 def report():
@@ -71,12 +66,13 @@ def report():
 
 
 def send_data(data):
-    start = time.time();
+    start = time.time()
 
-    headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-    headers = {'Authorization': 'Basic ZGVtbzpkZW1v'}
+    headers = {'Content-type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Basic ZGVtbzpkZW1v'}
+
     my_request = requests.post(config['server'][2]['server']+config['server'][2]['service'], json=data,
-                               headers=headers,verify=False)
+                               headers=headers, verify=False)
+
     finish = time.time() - start
 
     if my_request.status_code == 201 or my_request.status_code == 409:
@@ -90,19 +86,19 @@ def send_data(data):
 
     print("Response from server: {}".format(my_request.text))
 
+# main
 
 with open('config.json') as config_file:
     config = json.load(config_file)
 
 data_files = fnmatch.filter(os.listdir(config['features_sample_folder']), '*.csv')
+heath_files = fnmatch.filter(os.listdir(config['heath_sample_folder']), '*.csv')
+
 for file in data_files:
     with open(config['features_sample_folder']+'/'+file) as data_file:
-        encrypt_data(data_file.read(), file)
+        send_data(encrypt_data(data_file.name))
 
-        #send_data(json.load(data_file))
-        send_data(encrypt_data(data_file.read(), file))
-
-#report()
+report()
 
 
 
