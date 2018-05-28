@@ -74,5 +74,3 @@ class RSAHelper(object):
         digest.update(message)
         return signer.sign(digest)
         #return rsa.sign(message, self.private_key, 'SHA-1')
-
-
