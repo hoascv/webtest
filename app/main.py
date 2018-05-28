@@ -65,7 +65,7 @@ def report():
     webbrowser.open_new_tab(filename)
 
 
-def send_data(data,service):
+def send_data(data, service):
     start = time.time()
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Basic ZGVtbzpkZW1v'}
@@ -85,11 +85,16 @@ def send_data(data,service):
     # not until the full response has been transferred.
 
     print("Response from server: {}".format(my_request.text))
-
+    return {'service': service, 'time': round(my_request.elapsed.total_seconds()*1000, 2)}
 # main
 
 with open('config.json') as config_file:
     config = json.load(config_file)
+report = {'date': 'date',  'server': [],}
+
+
+
+
 
 data_files = fnmatch.filter(os.listdir(config['features_sample_folder']), '*.csv')
 vsu_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), 'vsu_*.csv')
@@ -98,19 +103,20 @@ dats_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), '
 for file in data_files:
     with open(config['features_sample_folder']+'/'+file) as data_file:
         pass
-        #send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['feature_service'])
+        report['server'].append(send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['feature_service']))
 
 for file in vsu_health_files:
     with open(config['health_sample_folder'] + '/' + file) as data_file:
-        send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['vsu_health_service'])
+        report['server'].append(send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['vsu_health_service']))
         print(data_file.name)
 
 for file in dats_health_files:
     with open(config['health_sample_folder'] + '/' + file) as data_file:
-        send_data(encrypt_data(data_file.name), config['server'][4]['server']+config['server'][4]['dats_health_service'])
+        report['server'].append(send_data(encrypt_data(data_file.name), config['server'][4]['server']+config['server'][4]['dats_health_service']))
         print(data_file.name)
 
 
+print(report)
 
 
 #report()
