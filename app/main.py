@@ -92,7 +92,7 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 
 data_files = fnmatch.filter(os.listdir(config['features_sample_folder']), '*.csv')
-heath_files = fnmatch.filter(os.listdir(config['heath_sample_folder']), '*.csv')
+heath_files = fnmatch.filter(os.listdir(config['health_sample_folder']), '*.csv')
 
 for file in data_files:
     with open(config['features_sample_folder']+'/'+file) as data_file:

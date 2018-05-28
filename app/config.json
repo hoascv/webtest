@@ -61,6 +61,8 @@
 
 	],
 
-"features_sample_folder": "./features_test_data"
+"features_sample_folder": "./features_test_data",
+"health_sample_folder": "./features_test_data"
+
 
 }
