@@ -13,8 +13,8 @@ class HelperReport(object):
     def report(self, table, value):
         pass
 
-    def append_data(self, data, table):
-        return self.data['service'][table]['content'].append(data)
+    def append_data(self, data, group):
+        return self.data['service'][group]['content'].append(data)
 
 
 

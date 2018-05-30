@@ -13,6 +13,7 @@
              <thead>
                 <tr>
                     <th>Feature service</th>
+                    <th>File size</th>
                     <th>Response time (ms)</th>
                     <th>Status code</th>
                     <th>Server message</th>
@@ -23,9 +24,10 @@
             {% for row in data['service'][index]['content'] %}
                 <tr>
                   <td>{{ row.service }}</td>
+                  <td>{{row.size}}</td>
                   <td>{{ row.time }} </td>
                   <td>{{row.status_code}}</td>
-                  <td>{{ row.message[0:20] }}</td>
+                  <td>{{ row.message[0:30] }}</td>
                 </tr>
             {% endfor %}
 
@@ -38,6 +40,7 @@
              <thead>
                 <tr>
                     <th>Health service (VSU)</th>
+                    <th>File size</th>
                     <th>Response time (ms)</th>
                     <th>Status code</th>
                     <th>Server message</th>
@@ -48,9 +51,10 @@
             {% for row in data['service'][index]['content'] %}
                 <tr>
                   <td>{{row.service}} </td>
+                  <td>{{row.size}}</td>
                   <td>{{ row.time }}</td>
                   <td>{{row.status_code}}</td>
-                  <td>{{ row.message[0:20] }}</td>
+                  <td>{{ row.message[0:30] }}</td>
                 </tr>
             {% endfor %}
 
@@ -62,6 +66,8 @@
              <thead>
                 <tr>
                     <th>Health Service (DATS)</th>
+                    <th>File Size</th>
+
                     <th>Response time (ms)</th>
                     <th>Status code</th>
                     <th>Server message</th>
@@ -72,9 +78,10 @@
             {% for row in data['service'][index]['content'] %}
                 <tr>
                   <td>{{ row.service }}</td>
+                  <td>{{row.size}}</td>
                   <td>{{ row.time }}</td>
                   <td>{{row.status_code}}</td>
-                  <td>{{ row.message[0:20] }}</td>
+                  <td>{{ row.message[0:30] }}</td>
                 </tr>
             {% endfor %}
 

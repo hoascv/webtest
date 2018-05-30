@@ -8,12 +8,13 @@ from app.RSAHelper import RSAHelper
 from app.AESHelper import AESHelper
 from app.Report import HelperReport
 import base64
+import sys
 
 
-def encrypt_data(filename):
+def encrypt_data(filename, server):
 
     enc_key = "HSKEY00000000000".encode("utf-8")
-    rsa_helper = RSAHelper(config['server'][2]['pfx_certificate'], '', config['server'][2]['server_certificate'], config['server'][2]['client_key'])
+    rsa_helper = RSAHelper(server['pfx_certificate'], '', server['server_certificate'], server['client_key'])
     aes_helper = AESHelper(enc_key)
     key_info = rsa_helper.encrypt_info_key(aes_helper.key)
     iv_info = rsa_helper.encrypt_info_key(aes_helper.iv)
@@ -47,10 +48,6 @@ def encrypt_data(filename):
     return payload
 
 
-def report():
-    pass
-
-
 def send_data(data, service):
     start = time.time()
 
@@ -61,18 +58,15 @@ def send_data(data, service):
 
     finish = time.time() - start
 
-    if my_request.status_code == 201 or my_request.status_code == 409:
-        pass
-
     print('status {} time elapsed {} in ms  total time: {}'.format(my_request.status_code,
                                                                    round(my_request.elapsed.total_seconds()*1000, 2),
                                                                    round(finish*1000, 2)))
     # elapsed measures the time between sending the request and finishing parsing the response headers,
     # not until the full response has been transferred.
 
-    print("Response from server: {}".format(my_request.text))
-    return {'service': service, 'Elapsed time': round(my_request.elapsed.total_seconds()*1000, 2), 'message': my_request.text,
-            'status_code': my_request.status_code, }
+    #print("Response from server: {}".format(my_request.text))
+    return {'service': service, 'time': round(my_request.elapsed.total_seconds()*1000, 2), 'message': my_request.text,
+            'status_code': my_request.status_code, 'size': sys.getsizeof(data), }
 
 ############ main ###################
 
@@ -80,41 +74,40 @@ def send_data(data, service):
 with open('config.json') as config_file:
     config = json.load(config_file)
 
-hreport = HelperReport('./report/template.html', 'ILIAS REPORT')
-
-data_files = fnmatch.filter(os.listdir(config['features_sample_folder']), '*.csv')
-vsu_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), 'vsu_*.csv')
-dats_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), 'dats_*.csv')
-
-for file in data_files:
-    with open(config['features_sample_folder']+'/'+file) as data_file:
-        pass
-        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][1]['server']+config['server'][1]['feature_service'])), table=0)
-
-for file in vsu_health_files:
-    with open(config['health_sample_folder'] + '/' + file) as data_file:
-        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][1]['server']+config['server'][1]['vsu_health_service'])), table=1)
+report = HelperReport('./report/template.html', 'ILIAS REPORT')
 
 
-for file in dats_health_files:
-    with open(config['health_sample_folder'] + '/' + file) as data_file:
-        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][1]['server']+config['server'][1]['dats_health_service'])), table=2)
+
+"if the service active execute test"
+
+#print(config)
 
 
-#print(hreport.data)
+for server in config['servers']:
+    if server['active']:
+        for service in server['services']:
+            if service['active']:
+
+                if os.path.exists(service['data_folder']):
+                    data_files = fnmatch.filter(os.listdir(service['data_folder']), '*.csv')
+
+                    for file in data_files:
+
+                            with open(service['data_folder']+'/'+file) as data_file:
+                                report.append_data((send_data(encrypt_data(data_file.name, server), server['server'] +
+                                                             service['service'])), group=service['group_id'])
+                else:
+                    print("Directory does not exists {1} service: {0}".format(service['service_name'], service['data_folder']))
+
+            else:
+                continue
 
 with open('./report/hsreport.html','w') as report_file:
-    report_file.write(hreport.execute_report())
+    report_file.write(report.execute_report())
 
 
 filename = 'file:///' + os.getcwd() + '/report' + '/hsreport.html'
 webbrowser.open_new_tab(filename)
-
-
-#report()
-
-
-
 
 
 #try:

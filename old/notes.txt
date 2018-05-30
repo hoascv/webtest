@@ -1,0 +1,100 @@
+from OpenSSL import crypto
+
+cert_file = '/path/to/your/certificate'
+cert = crypto.load_certificate(crypto.FILETYPE_PEM, open(cert_file).read())
+subject = cert.get_subject()
+issued_to = subject.CN    # the Common Name field
+issuer = cert.get_issuer()
+issued_by = issuer.CN
+
+
+tutorial
+https://www.dlitz.net/software/pycrypto/doc/
+
+
+
+#for AES encryption
+https://stackoverflow.com/questions/12524994/encrypt-decrypt-using-pycrypto-aes-256
+
+
+M2Crypto
+https://github.com/dsoprea/M2CryptoWin64
+
+
+https://pypi.org/project/M2Crypto/#history
+
+http://www.microsoft.com/download/details.aspx?id=8279
+
+own git server
+https://www.linux.com/learn/how-run-your-own-git-server
+
+easy_install http://www.voidspace.org.uk/python/pycrypto-2.6.1/pycrypto-2.6.1.win-amd64-py3.4.exe
+
+
+
+####################################################################################################
+class RSAHelper(object):
+    #def __init__(self, server_certificate, client_key):
+    #    self.server_certificate = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
+    #                                                             open(server_certificate).read())
+    #    self.pubKey = self.server_certificate.get_pubkey()
+    #    with open(client_key, 'r') as key:
+    #        self.privateKey = RSA.importKey(key.read(), passphrase='')
+    def __init__(self, pfx_certificate, pfx_password, server_certificate):
+        self.server_certificate = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
+                                                                     open(server_certificate).read())
+        self.pubKey = self.server_certificate.get_pubkey()
+
+
+        #OpenSSL.crypto.dump_publickey(OpenSSL.crypto.FILETYPE_PEM, self.server_certificate.get_pubkey())
+        with tempfile.NamedTemporaryFile(suffix='.pem', delete=False) as t_pem:
+            f_pem = open(t_pem.name, 'wb')
+            pfx = open(pfx_certificate, 'rb').read()
+            p12 = OpenSSL.crypto.load_pkcs12(pfx, str.encode(pfx_password))
+            f_pem.write(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_PEM, p12.get_privatekey()))
+            f_pem.write(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_PEM, p12.get_certificate()))
+            ca = p12.get_ca_certificates()
+            if ca is not None:
+                for cert in ca:
+                    f_pem.write(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_PEM, cert))
+            f_pem.close()
+
+        self.temp_private_key = OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_PEM, p12.get_privatekey())
+
+        keyPriv = RSA.importKey(self.temp_private_key)
+        modulusN = keyPriv.n
+        pubExpE = keyPriv.e
+        priExpD = keyPriv.d
+        primeP = keyPriv.p
+        primeQ = keyPriv.q
+
+        self.private_key = RSA.construct((modulusN, pubExpE, priExpD, primeP, primeQ))
+
+
+
+
+
+
+    def get_publickey(self):
+        return OpenSSL.crypto.dump_publickey(OpenSSL.crypto.FILETYPE_PEM, self.pubKey)
+
+    def get_subject(self):
+        return self.server_certificate.get_subject()
+
+    def get_privatekey(self):
+        return self.privateKey
+
+    def encrypt_info(self, key, IV):
+        return rsa.encrypt(key, self.pubKey), rsa.encrypt(key, self.pubKey)
+
+
+###############################################################################################################################
+
+
+>>> import base64
+>>> encoded = base64.b64encode('data to be encoded')
+>>> encoded
+'ZGF0YSB0byBiZSBlbmNvZGVk'
+>>> data = base64.b64decode(encoded)
+>>> data
+'data to be encoded'

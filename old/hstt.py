@@ -44,5 +44,15 @@ results = pool.map(soma, test)
 pool.close()
 pool.join()
 
-for result in results:
-    print(result)
+#for result in results:
+#    print(result)
+
+data3 = {'features_sample_folder': './features_test_data', 'server': [{'pfx_password': '', 'services': [{'service_name': 'feature', 'active': True, 'service': ':3434/Features'}, {'service_name': 'Vsu Health', 'active': True, 'service': '3434/VsuHealth'}, {'service_name': 'Vsu Health', 'active': True, 'service': '3434/DatsHealth'}], 'server_name': 'DEP1(DEV-VIRTUAL)', 'pfx_certificate': './certificates/NVOTest.pfx', 'user': 'demo', 'server': 'https://172.19.11.139', 'server_certificate': './certificates/NVOTest.pfx.cer.pem', 'sample_folder': '', 'active': True, 'password': 'demo', 'client_key': './certificates/NVOTest.pfx.key.pem'}, {'pfx_password': '', 'services': [{'service_name': 'feature', 'active': True, 'service': ':3434/Features'}, {'service_name': 'Vsu Health', 'active': True, 'service': '3434/VsuHealth'}, {'service_name': 'Vsu Health', 'active': True, 'service': '3434/DatsHealth'}], 'server_name': 'DEP3(DEV1)', 'pfx_certificate': './certificates/NVOTest.pfx', 'user': 'demo', 'server': 'https://172.18.21.5', 'server_certificate': './certificates/NVOTest.pfx.cer.pem', 'sample_folder': '', 'active': False, 'password': 'demo', 'client_key': './certificates/NVOTest.pfx.key.pem'}], 'report_folder': './report', 'health_sample_folder': './health_test_data'}
+
+
+
+for server in data3['server']:
+    if server['active']:
+        print(server['server'])
+        for index in range(len(server['services'])):
+            print(server['services'][index]['service_name'])
