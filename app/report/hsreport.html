@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <title>Title</title>
-    <h1>WEBSERVICES REPORT</h1>
+    <h1>ILIAS REPORT</h1>
 </head>
 <body>
 
     
-        <table id="table1" class="table table-hover">
+        <table id="table1" class="container">
              <thead>
                 <tr>
                     <th>Feature service</th>
-                    <th>time</th>
-                <th>message</th>
+                    <th>Response time (ms)</th>
+                    <th>Status code</th>
+                    <th>Server message</th>
                 </tr>
             </thead>
 
@@ -21,61 +23,71 @@
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>76.67</td>
+                  <td>73.53 </td>
+                  <td>200</td>
                   <td>success</td>
                 </tr>
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>74.8</td>
+                  <td>72.49 </td>
+                  <td>200</td>
                   <td>success</td>
                 </tr>
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>67.69</td>
+                  <td>65.14 </td>
+                  <td>200</td>
                   <td>success</td>
                 </tr>
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>69.45</td>
+                  <td>67.11 </td>
+                  <td>200</td>
                   <td>success</td>
                 </tr>
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>50.84</td>
+                  <td>46.42 </td>
+                  <td>200</td>
                   <td>success</td>
                 </tr>
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>169.77</td>
+                  <td>152.15 </td>
+                  <td>400</td>
                   <td>Violation of UNIQUE </td>
                 </tr>
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>180.15</td>
+                  <td>166.02 </td>
+                  <td>400</td>
                   <td>Violation of UNIQUE </td>
                 </tr>
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>169.65</td>
+                  <td>166.18 </td>
+                  <td>400</td>
                   <td>Violation of UNIQUE </td>
                 </tr>
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>154.15</td>
+                  <td>159.2 </td>
+                  <td>400</td>
                   <td>Violation of UNIQUE </td>
                 </tr>
             
                 <tr>
                   <td>https://172.19.11.139:3434/Features</td>
-                  <td>57.19</td>
+                  <td>55.27 </td>
+                  <td>400</td>
                   <td>Violation of UNIQUE </td>
                 </tr>
             
@@ -91,12 +103,13 @@
 
     
     
-        <table id="table2" class="table table-hover">
+        <table id="table2" class="container">
              <thead>
                 <tr>
                     <th>Health service (VSU)</th>
-                    <th>time</th>
-                <th>message</th>
+                    <th>Response time (ms)</th>
+                    <th>Status code</th>
+                    <th>Server message</th>
                 </tr>
             </thead>
 
@@ -104,7 +117,8 @@
             
                 <tr>
                   <td> <a href="https://172.19.11.139:3434/VsuHealth">https://172.19.11.139:3434/VsuHealth</a> </td>
-                  <td>34.7</td>
+                  <td>32.68</td>
+                  <td>200</td>
                   <td>success</td>
                 </tr>
             
@@ -119,12 +133,13 @@
     
     
     
-        <table id="table3" class="table table-hover">
+        <table id="table3" class="container">
              <thead>
                 <tr>
                     <th>Health Service (DATS)</th>
-                    <th>time</th>
-                <th>message</th>
+                    <th>Response time (ms)</th>
+                    <th>Status code</th>
+                    <th>Server message</th>
                 </tr>
             </thead>
 
@@ -132,7 +147,8 @@
             
                 <tr>
                   <td>https://172.19.11.139:3434/DatsHealth</td>
-                  <td>14.38</td>
+                  <td>14.58</td>
+                  <td>400</td>
                   <td>Certificate not foun</td>
                 </tr>
             

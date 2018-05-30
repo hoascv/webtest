@@ -4,14 +4,10 @@ import fnmatch
 import requests
 import webbrowser
 import time
-import bs4
 from app.RSAHelper import RSAHelper
 from app.AESHelper import AESHelper
 from app.Report import HelperReport
-
 import base64
-import certifi
-import ssl
 
 
 def encrypt_data(filename):
@@ -42,7 +38,7 @@ def encrypt_data(filename):
     #print(certifi.where()) windows certificates
 
     with open('data.txt', 'w') as outfile:
-        json.dump((payload), outfile)
+        json.dump(payload, outfile)
 
     #with open('data.txt') as config_file:
     #    new_json = json.load(config_file)
@@ -53,10 +49,6 @@ def encrypt_data(filename):
 
 def report():
     pass
-
-
-
-
 
 
 def send_data(data, service):
@@ -79,7 +71,8 @@ def send_data(data, service):
     # not until the full response has been transferred.
 
     print("Response from server: {}".format(my_request.text))
-    return {'service': service, 'time': round(my_request.elapsed.total_seconds()*1000, 2), 'message': my_request.text, }
+    return {'service': service, 'Elapsed time': round(my_request.elapsed.total_seconds()*1000, 2), 'message': my_request.text,
+            'status_code': my_request.status_code, }
 
 ############ main ###################
 
@@ -87,9 +80,7 @@ def send_data(data, service):
 with open('config.json') as config_file:
     config = json.load(config_file)
 
-hreport = HelperReport('./template.html','ILIAS REPORT')
-
-
+hreport = HelperReport('./report/template.html', 'ILIAS REPORT')
 
 data_files = fnmatch.filter(os.listdir(config['features_sample_folder']), '*.csv')
 vsu_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), 'vsu_*.csv')
@@ -98,25 +89,25 @@ dats_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), '
 for file in data_files:
     with open(config['features_sample_folder']+'/'+file) as data_file:
         pass
-        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['feature_service'])), table=0)
+        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][1]['server']+config['server'][1]['feature_service'])), table=0)
 
 for file in vsu_health_files:
     with open(config['health_sample_folder'] + '/' + file) as data_file:
-        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['vsu_health_service'])), table=1)
+        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][1]['server']+config['server'][1]['vsu_health_service'])), table=1)
 
 
 for file in dats_health_files:
     with open(config['health_sample_folder'] + '/' + file) as data_file:
-        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['dats_health_service'])), table=2)
+        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][1]['server']+config['server'][1]['dats_health_service'])), table=2)
 
 
 #print(hreport.data)
 
-with open('./hsreport.html','w') as report_file:
+with open('./report/hsreport.html','w') as report_file:
     report_file.write(hreport.execute_report())
 
 
-filename = 'file:///' + os.getcwd()  + '/hsreport.html'
+filename = 'file:///' + os.getcwd() + '/report' + '/hsreport.html'
 webbrowser.open_new_tab(filename)
 
 

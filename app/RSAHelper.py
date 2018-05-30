@@ -7,10 +7,6 @@ import base64
 from Crypto.Hash import SHA512, SHA384, SHA256, SHA, MD5
 
 
-
-
-
-
 class RSAHelper(object):
     #def __init__(self, server_certificate, client_key):
     #    self.server_certificate = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
@@ -54,12 +50,6 @@ class RSAHelper(object):
         self.private_key = RSA.construct((modulusN, pubExpE, priExpD, primeP, primeQ))
 
        # self.private_key = rsa.PrivateKey.load_pkcs1(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_ASN1, p12.get_privatekey()), format='DER')
-
-
-
-
-
-
 
     def encrypt_info_key(self, key):
         return rsa.encrypt(key, self.recipient_public_key)

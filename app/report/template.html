@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <title>Title</title>
     <h1>{{ data.report }}</h1>
@@ -8,12 +9,13 @@
 <body>
 {% for index in range(size) %}
     {% if index == 0 %}
-        <table id="table1" class="table table-hover">
+        <table id="table1" class="container">
              <thead>
                 <tr>
                     <th>Feature service</th>
-                    <th>time</th>
-                <th>message</th>
+                    <th>Response time (ms)</th>
+                    <th>Status code</th>
+                    <th>Server message</th>
                 </tr>
             </thead>
 
@@ -21,7 +23,8 @@
             {% for row in data['service'][index]['content'] %}
                 <tr>
                   <td>{{ row.service }}</td>
-                  <td>{{ row.time }}</td>
+                  <td>{{ row.time }} </td>
+                  <td>{{row.status_code}}</td>
                   <td>{{ row.message[0:20] }}</td>
                 </tr>
             {% endfor %}
@@ -31,20 +34,22 @@
         <br>
     {% endif %}
     {% if index == 1 %}
-        <table id="table2" class="table table-hover">
+        <table id="table2" class="container">
              <thead>
                 <tr>
                     <th>Health service (VSU)</th>
-                    <th>time</th>
-                <th>message</th>
+                    <th>Response time (ms)</th>
+                    <th>Status code</th>
+                    <th>Server message</th>
                 </tr>
             </thead>
 
             <tbody>
             {% for row in data['service'][index]['content'] %}
                 <tr>
-                  <td> <a href="{{row.service}}">{{row.service}}</a> </td>
+                  <td>{{row.service}} </td>
                   <td>{{ row.time }}</td>
+                  <td>{{row.status_code}}</td>
                   <td>{{ row.message[0:20] }}</td>
                 </tr>
             {% endfor %}
@@ -53,12 +58,13 @@
       </table>
     {% endif %}
     {% if index == 2 %}
-        <table id="table3" class="table table-hover">
+        <table id="table3" class="container">
              <thead>
                 <tr>
                     <th>Health Service (DATS)</th>
-                    <th>time</th>
-                <th>message</th>
+                    <th>Response time (ms)</th>
+                    <th>Status code</th>
+                    <th>Server message</th>
                 </tr>
             </thead>
 
@@ -67,6 +73,7 @@
                 <tr>
                   <td>{{ row.service }}</td>
                   <td>{{ row.time }}</td>
+                  <td>{{row.status_code}}</td>
                   <td>{{ row.message[0:20] }}</td>
                 </tr>
             {% endfor %}

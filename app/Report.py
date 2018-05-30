@@ -6,8 +6,7 @@ import os
 class HelperReport(object):
     def __init__(self, template_path, name):
         self.template = template_path
-        self.name = name
-        self.data = {"report": "WEBSERVICES REPORT", "service": [{"content": []}, {"content": []}, {"content": []}]
+        self.data = {"report": name, "service": [{"content": []}, {"content": []}, {"content": []}]
 
 }
 

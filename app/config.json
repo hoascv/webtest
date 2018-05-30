@@ -1,17 +1,6 @@
 {
 	"server": [{
 			"id":0,
-			"server_name": "HSWEBAPP",
-			"server": "https://dev.hswebapp.com",
-			"server_port": "testPort",
-			"http_method": "GET",
-			"service": "/api/templog?sensor_type=AM2302",
-			"certificate": "./certificates/DATS001.crt",
-			"sample_folder": "",
-			"user": "hoas",
-			"password": "pass"},
-
-		{	"id":1,
 			"server_name": "HStestDump",
 			"server": "http://ptsv2.com",
 			"server_port": "testPort",
@@ -23,7 +12,7 @@
 			"password": "pass"
 
 		},
-		{	"id":2,
+		{	"id":1,
 		    "server_name": "DEP1(DEV-VIRTUAL)",
 			"server": "https://172.19.11.139",
 			"server_port": "3434",
@@ -40,7 +29,7 @@
 			"password": "demo"
 
 		},
-		{	"id":3,
+		{	"id":2,
 		    "server_name": "HStestDump",
 			"server": "http://ptsv2.com",
 			"server_port": "8080",
@@ -61,7 +50,7 @@
 
 
 		},
-		{	"id":4,
+		{	"id":3,
 		    "server_name": "DEP3(DEV1)",
 			"server": "https://172.18.21.5",
 			"server_port": "3434",
@@ -85,7 +74,7 @@
 	],
 
 "features_sample_folder": "./features_test_data",
-"health_sample_folder": "./health_test_data"
-
+"health_sample_folder": "./health_test_data",
+"report_folder":"./report"
 
 }
