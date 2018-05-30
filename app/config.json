@@ -45,7 +45,7 @@
 			"server": "http://ptsv2.com",
 			"server_port": "8080",
 			"http_method": "POST",
-			"service": "/t/hstest/post",
+			"feature_service": "/t/hstest/post",
             "vsu_health_service":"/t/hstest/post",
 			"dats_health_service":"/t/hstest/posth",
 			"client_key": "./certificates/NVOTest.pfx.key.pem",

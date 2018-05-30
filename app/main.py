@@ -7,6 +7,8 @@ import time
 import bs4
 from app.RSAHelper import RSAHelper
 from app.AESHelper import AESHelper
+from app.Report import HelperReport
+
 import base64
 import certifi
 import ssl
@@ -50,7 +52,7 @@ def encrypt_data(filename):
 
 
 def report():
-
+    pass
 
 
 
@@ -77,12 +79,17 @@ def send_data(data, service):
     # not until the full response has been transferred.
 
     print("Response from server: {}".format(my_request.text))
-    return {'service': service, 'time': round(my_request.elapsed.total_seconds()*1000, 2)}
-# main
+    return {'service': service, 'time': round(my_request.elapsed.total_seconds()*1000, 2), 'message': my_request.text, }
+
+############ main ###################
+
 
 with open('config.json') as config_file:
     config = json.load(config_file)
-report = {'date': 'date',  'server': [],}
+
+hreport = HelperReport('./template.html','ILIAS REPORT')
+
+
 
 data_files = fnmatch.filter(os.listdir(config['features_sample_folder']), '*.csv')
 vsu_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), 'vsu_*.csv')
@@ -91,20 +98,26 @@ dats_health_files = fnmatch.filter(os.listdir(config['health_sample_folder']), '
 for file in data_files:
     with open(config['features_sample_folder']+'/'+file) as data_file:
         pass
-        #report['server'].append(send_data(encrypt_data(data_file.name), config['server'][3]['server']+config['server'][3]['feature_service']))
+        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['feature_service'])), table=0)
 
 for file in vsu_health_files:
     with open(config['health_sample_folder'] + '/' + file) as data_file:
-        report['server'].append(send_data(encrypt_data(data_file.name), config['server'][3]['server']+config['server'][3]['vsu_health_service']))
-        print(data_file.name)
+        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['vsu_health_service'])), table=1)
+
 
 for file in dats_health_files:
     with open(config['health_sample_folder'] + '/' + file) as data_file:
-        report['server'].append(send_data(encrypt_data(data_file.name), config['server'][3]['server']+config['server'][3]['dats_health_service']))
-        print(data_file.name)
+        hreport.append_data((send_data(encrypt_data(data_file.name), config['server'][2]['server']+config['server'][2]['dats_health_service'])), table=2)
 
 
-print(report)
+#print(hreport.data)
+
+with open('./hsreport.html','w') as report_file:
+    report_file.write(hreport.execute_report())
+
+
+filename = 'file:///' + os.getcwd()  + '/hsreport.html'
+webbrowser.open_new_tab(filename)
 
 
 #report()
