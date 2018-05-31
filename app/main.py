@@ -33,10 +33,10 @@ def encrypt_data(filename, server):
     payload["RecordTime"] = "2018-04-25T12:46:07.0204193Z"
     payload["EncryptedString"] = base64.b64encode(encrypted_string).decode('utf-8')
     payload["SignedDataString"] = base64.b64encode(signature).decode('utf-8')
-    payload["FileName"] = filename.split('/')[-1]
+    payload["FileName"] = filename.split('\\')[-1]
     payload["EncryptedIVString"] = base64.b64encode(iv_info).decode('utf-8')
 
-    #print(certifi.where()) windows certificates
+
 
     with open('data.txt', 'w') as outfile:
         json.dump(payload, outfile)
@@ -48,7 +48,7 @@ def encrypt_data(filename, server):
     return payload
 
 
-def send_data(data, service):
+def send_data(data, service,request_id):
     start = time.time()
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Basic ZGVtbzpkZW1v'}
@@ -58,15 +58,15 @@ def send_data(data, service):
 
     finish = time.time() - start
 
-    print('status {} time elapsed {} in ms  total time: {}'.format(my_request.status_code,
+    print('status {} time elapsed {} (ms)  total time: {} message {} Request id {} filename {}'.format(my_request.status_code,
                                                                    round(my_request.elapsed.total_seconds()*1000, 2),
-                                                                   round(finish*1000, 2)))
+                                                                   round(finish*1000, 2), my_request.text, request_id, data['FileName'] ))
     # elapsed measures the time between sending the request and finishing parsing the response headers,
     # not until the full response has been transferred.
 
     #print("Response from server: {}".format(my_request.text))
     return {'service': service, 'time': round(my_request.elapsed.total_seconds()*1000, 2), 'message': my_request.text,
-            'status_code': my_request.status_code, 'size': sys.getsizeof(data), }
+            'status_code': my_request.status_code, 'size': sys.getsizeof(data), 'filename': data['FileName'], 'request_id': request_id}
 
 ############ main ###################
 
@@ -82,6 +82,8 @@ report = HelperReport('./report/template.html', 'ILIAS REPORT')
 
 #print(config)
 
+request_number=1
+requests_start = time.time()
 
 for server in config['servers']:
     if server['active']:
@@ -89,20 +91,23 @@ for server in config['servers']:
             if service['active']:
 
                 if os.path.exists(service['data_folder']):
-                    data_files = fnmatch.filter(os.listdir(service['data_folder']), '*.csv')
 
-                    for file in data_files:
-
-                            with open(service['data_folder']+'/'+file) as data_file:
+                    for root, dirs, files in os.walk(service['data_folder']):
+                        for filename in fnmatch.filter(files, '*.csv'):
+                            full_path = os.path.join(root, filename)
+                            with open(full_path) as data_file:
                                 report.append_data((send_data(encrypt_data(data_file.name, server), server['server'] +
-                                                             service['service'])), group=service['group_id'])
+                                                   service['service'], request_id=request_number)),
+                                                   group=service['group_id'])
+                                request_number = request_number + 1
                 else:
                     print("Directory does not exists {1} service: {0}".format(service['service_name'], service['data_folder']))
 
             else:
                 continue
 
-with open('./report/hsreport.html','w') as report_file:
+report.report_finish(time.time() - requests_start)
+with open('./report/hsreport.html', 'w') as report_file:
     report_file.write(report.execute_report())
 
 

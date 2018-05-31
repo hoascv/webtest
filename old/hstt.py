@@ -8,7 +8,8 @@
 #            print(cert.enhanced_keyusage_names())
 # </editor-fold>
 
-
+import os
+import fnmatch
 import urllib3
 from multiprocessing.dummy import Pool as ThreadPool
 
@@ -51,8 +52,20 @@ data3 = {'features_sample_folder': './features_test_data', 'server': [{'pfx_pass
 
 
 
-for server in data3['server']:
-    if server['active']:
-        print(server['server'])
-        for index in range(len(server['services'])):
-            print(server['services'][index]['service_name'])
+#for server in data3['server']:
+#    if server['active']:
+ #       print(server['server'])
+ #       for index in range(len(server['services'])):
+ #           print(server['services'][index]['service_name'])
+
+#for root, dirs, files in os.walk("\\\\172.19.11.101\\share\\CeydaToHelder\\DEP3\\TestDEP3\\FeaturesSamples"):
+#    for filename in fnmatch.filter(files, '*.csv'):
+#        full_path = os.path.join(root, filename)
+
+filename = "\\172.19.11.101\share\CeydaToHelder\DEP3\TestDEP3\FeaturesSamples\\05\\07\\a44e311e1bcc_20150507-083000.csv"
+print(filename.split('\\')[-1])
+
+
+
+
+

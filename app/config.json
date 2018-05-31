@@ -11,7 +11,8 @@
 						 "service": ":3434/Features",
 						 "active":true,
 						 "group_id":0,
-						 "data_folder":"./features_test_data"
+						 "data_folder":"./features_test_data",
+						 "data_folder1":"\\\\172.19.11.101\\share\\CeydaToHelder\\DEP3\\TestDEP3\\FeaturesSamples"
 						},
 						{"service_name": "Vsu_Health",
 						 "service": ":3434/VsuHealth",
@@ -24,6 +25,7 @@
 						"active":true,
 						"group_id":2,
 						"data_folder":"./health_dats_test_data"
+
 						}
 
 					],
@@ -68,8 +70,46 @@
 				"pfx_password":"",
 				"sample_folder": "",
 				"user": "demo",
-				"password": "demo"
+				"password": "demo",
+				"debug_payload_folder":"./debug/payload"
 
+				},
+			 {
+				"active":false,
+				"server_name": "DATS",
+				"server": "https://172.19.11.126",
+				"services":
+					[
+						{"service_name": "feature",
+						 "service": ":3434/Features",
+						 "active":false,
+						 "group_id":0,
+						 "data_folder1":"./features_test_data",
+						 "data_folder":"\\\\172.19.11.101\\share\\CeydaToHelder\\DEP3\\TestDEP3\\FeaturesSamples"
+						},
+						{"service_name": "Vsu_Health",
+						 "service": ":3434/VsuHealth",
+						 "active":false,
+						 "group_id":1,
+						 "data_folder":"./health_vsu_test_data"
+						},
+						{"service_name": "Dats_Health",
+						"service":":3434/DatsHealth",
+						"active":false,
+						"group_id":2,
+						"data_folder":"./health_dats_test_data"
+
+						}
+
+					],
+				"client_key": "./certificates/NVOTest.pfx.key.pem",
+				"server_certificate":"./certificates/NVOTest.pfx.cer.pem",
+				"pfx_certificate":"./certificates/NVOTest.pfx",
+				"pfx_password":"",
+				"sample_folder": "",
+				"user": "demo",
+				"password": "demo",
+				"debug_payload_folder":"./debug/payload"
 				}
 
 

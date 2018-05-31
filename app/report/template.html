@@ -4,7 +4,9 @@
 	<link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <title>Title</title>
-    <h1>{{ data.report }}</h1>
+    <h1>{{ data.report }} </h1>
+    <h4>Generated at: {{ date }}  Duration: {{finish}} segs</h4>
+
 </head>
 <body>
 {% for index in range(size) %}
@@ -16,6 +18,7 @@
                     <th>File size</th>
                     <th>Response time (ms)</th>
                     <th>Status code</th>
+                    <th>Request id</th>
                     <th>Server message</th>
                 </tr>
             </thead>
@@ -27,6 +30,7 @@
                   <td>{{row.size}}</td>
                   <td>{{ row.time }} </td>
                   <td>{{row.status_code}}</td>
+                  <td> {{row.request_id}}</td>
                   <td>{{ row.message[0:30] }}</td>
                 </tr>
             {% endfor %}
@@ -43,6 +47,7 @@
                     <th>File size</th>
                     <th>Response time (ms)</th>
                     <th>Status code</th>
+                     <th>Request id</th>
                     <th>Server message</th>
                 </tr>
             </thead>
@@ -54,6 +59,7 @@
                   <td>{{row.size}}</td>
                   <td>{{ row.time }}</td>
                   <td>{{row.status_code}}</td>
+                  <td> {{row.request_id}}</td>
                   <td>{{ row.message[0:30] }}</td>
                 </tr>
             {% endfor %}
@@ -70,6 +76,7 @@
 
                     <th>Response time (ms)</th>
                     <th>Status code</th>
+                     <th>Request id</th>
                     <th>Server message</th>
                 </tr>
             </thead>
@@ -81,6 +88,7 @@
                   <td>{{row.size}}</td>
                   <td>{{ row.time }}</td>
                   <td>{{row.status_code}}</td>
+                    <td> {{row.request_id}}</td>
                   <td>{{ row.message[0:30] }}</td>
                 </tr>
             {% endfor %}
@@ -91,6 +99,7 @@
 
 
 {% endfor %}
+
 </body>
 </html>
 
