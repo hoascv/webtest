@@ -2,7 +2,7 @@
 	"servers":
 	     [
 			   {
-				"active":true,
+				"active":false,
 				"server_name": "DEP1(DEV-VIRTUAL)",
 				"server": "https://172.19.11.139",
 				"services":
@@ -73,6 +73,29 @@
 				"password": "demo",
 				"debug_payload_folder":"./debug/payload"
 
+				},
+			 {
+				"active":true,
+				"server_name": "DATS",
+				"server": "http://ptsv2.com",
+				"services":
+					[
+						{"service_name": "feature",
+						 "service": "/t/hstest/post",
+						 "active":true,
+						 "group_id":0,
+						 "data_folder":"./features_test_data"
+						}
+
+					],
+				"client_key": "./certificates/NVOTest.pfx.key.pem",
+				"server_certificate":"./certificates/NVOTest.pfx.cer.pem",
+				"pfx_certificate":"./certificates/NVOTest.pfx",
+				"pfx_password":"",
+				"sample_folder": "",
+				"user": "demo",
+				"password": "demo",
+				"debug_payload_folder":"./debug/payload"
 				},
 			 {
 				"active":false,

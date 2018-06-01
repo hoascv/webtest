@@ -11,6 +11,7 @@ class HelperReport(object):
         self.data = {"report": name, "service": [{"content": []}, {"content": []}, {"content": []}]}
         self.report_date = datetime.now(get_localzone())
         self.finish=0
+        
     def report(self, table, value):
         pass
 
