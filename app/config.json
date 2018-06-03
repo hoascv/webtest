@@ -76,7 +76,7 @@
 				},
 			 {
 				"active":true,
-				"server_name": "DATS",
+				"server_name": "TOILET SERVICE",
 				"server": "http://ptsv2.com",
 				"services":
 					[
@@ -85,6 +85,18 @@
 						 "active":true,
 						 "group_id":0,
 						 "data_folder":"./features_test_data"
+						},
+						{"service_name": "Vsu Health",
+						 "service": "/t/hstest/post",
+						 "active":true,
+						 "group_id":1,
+						 "data_folder":"./health_vsu_test_data"
+						},
+						{"service_name": "Dats Health",
+						"service":"/t/hstest/post",
+						"active":true,
+						"group_id":2,
+						"data_folder":"./health_dats_test_data"
 						}
 
 					],
@@ -112,13 +124,13 @@
 						},
 						{"service_name": "Vsu_Health",
 						 "service": ":3434/VsuHealth",
-						 "active":false,
+						 "active":true,
 						 "group_id":1,
 						 "data_folder":"./health_vsu_test_data"
 						},
 						{"service_name": "Dats_Health",
 						"service":":3434/DatsHealth",
-						"active":false,
+						"active":true,
 						"group_id":2,
 						"data_folder":"./health_dats_test_data"
 

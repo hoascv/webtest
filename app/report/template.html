@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,10 +6,22 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <h1>{{ data.report }} </h1>
-    <h4>Generated at: {{ date }}  Duration: {{finish}} segs</h4>
+    <h4>Generated at: {{ date }}  Duration: {{finish}} segs  </h4>
 
 </head>
+{% macro increment(dct, key, inc=1)%}
+    {% if dct.update({key: dct[key] + inc}) %} {% endif %}
+    {% if dct.update({'total': dct['total'] + inc}) %} {% endif %}
+
+{% endmacro %}
+
+
+
+
+
+
 <body>
+{% set requests = { 'service': 0, 'service_values':[] , 'vsu_health': 0, 'vsu_health_values':[] , 'dats_health':0, 'dats_health_values':[] ,'total':0 }    %}
 {% for index in range(size) %}
     {% if index == 0 %}
         <table id="table1" class="container">
@@ -25,6 +38,8 @@
 
             <tbody>
             {% for row in data['service'][index]['content'] %}
+            {{ increment(requests, 'service') }}
+            {{ requests['service_values'].append(row.time) }}
                 <tr>
                   <td>{{ row.service }}</td>
                   <td>{{row.size}}</td>
@@ -53,7 +68,10 @@
             </thead>
 
             <tbody>
+
             {% for row in data['service'][index]['content'] %}
+            {{ increment(requests, 'vsu_health') }}
+            {{ requests['vsu_health_values'].append(row.time) }}
                 <tr>
                   <td>{{row.service}} </td>
                   <td>{{row.size}}</td>
@@ -83,6 +101,8 @@
 
             <tbody>
             {% for row in data['service'][index]['content'] %}
+             {{ increment(requests, 'dats_health') }}
+            {{ requests['dats_health_values'].append(row.time) }}
                 <tr>
                   <td>{{ row.service }}</td>
                   <td>{{row.size}}</td>
@@ -100,6 +120,20 @@
 
 {% endfor %}
 
+<h3>
+    Total Request: {{ requests['total'] }}
+
+</h3>
+<h4>
+    <p> Feature Service : {{ requests['service'] }} requests  Max: {{requests['service_values']| max }} ms  {{requests['service_values'][0]}}  Min: {{requests['service_values']| min }} ms
+        AVG: {{( requests['service_values']| sum ) /(requests['service_values']| length)|round}} ms </p>
+    <p> VSU Health Service : {{ requests['vsu_health'] }} Max: {{requests['vsu_health_values']| max }} {{requests['vsu_health_values'][0]}}  Min: {{requests['vsu_service_values']| min }}
+        AVG: {{( requests['vsu_health_values']| sum ) /(requests['vsu_health_values']| length)|round}} </p>
+
+    <p> DATS Health Service : {{ requests['dats_health'] }} Max: {{requests['dats_health_values']| max }} {{requests['dats_health_values'][0]}}  Min: {{requests['dats_service_values']| min }}
+        AVG: {{( requests['dats_health_values']| sum ) /(requests['dats_health_values']| length)|round}} </p>
+
+</h4>
+
 </body>
 </html>
-
