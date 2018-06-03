@@ -161,7 +161,7 @@ def main():
     requests_start = time.time()
     threads = []
 
-    for i in range(1):
+    for i in range(5):
         threads.append(DATS(name='DATS' + str(i).zfill(4), dats_id="0001C0099AEA", kwargs={'vsu': 'a44e311e1bcc'}))
 
     for x in threads:
