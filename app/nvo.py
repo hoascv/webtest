@@ -2,11 +2,10 @@ from threading import Thread
 import threading
 import time
 import logging
-from  random import  randint
+from random import randint
 
 logging.basicConfig(level=logging.DEBUG,
                     format='(%(threadName)-9s) %(message)s',)
-
 
 
 class Vsu(Thread):
@@ -15,10 +14,15 @@ class Vsu(Thread):
         super().__init__(name=name, target=target)
         self.args = args
         self.kwargs = kwargs
+        self.request_id = 0
 
-    #def run(self):
-    #    logging.debug('running with %s and %s', self.args, self.kwargs)
-    #    return
+    def run(self):
+        logging.debug('running with %s and %s', self.args, self.kwargs)
+        return
+
+
+
+
 
 
 class DATS(Thread):
@@ -28,12 +32,15 @@ class DATS(Thread):
         self.args = args
         self.kwargs = kwargs
 
-    #def run(self):
-    #    logging.debug('running with %s and %s', self.args, self.kwargs)
-    #    return
+    def run(self):
+        logging.debug('running with %s and %s', self.args, self.kwargs)
+        return
 
 def test():
     logging.debug('Starting ...')
+    print(threading.current_thread().name)
+
+
     time.sleep(randint(0, 10))
     logging.debug('Exiting ...')
 

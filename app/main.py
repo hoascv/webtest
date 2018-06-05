@@ -68,59 +68,53 @@ def send_data(data, service,request_id):
     return {'service': service, 'time': round(my_request.elapsed.total_seconds()*1000, 2), 'message': my_request.text,
             'status_code': my_request.status_code, 'size': sys.getsizeof(data), 'filename': data['FileName'], 'request_id': request_id}
 
-############ main ###################
+
+def main():
+
+    with open('config.json') as config_file:
+        config = json.load(config_file)
+
+    report = HelperReport('./report/template.html', 'ILIAS REPORT')
 
 
-with open('config.json') as config_file:
-    config = json.load(config_file)
 
-report = HelperReport('./report/template.html', 'ILIAS REPORT')
+    "if the service active execute test"
 
 
+    request_number=1
+    requests_start = time.time()
 
-"if the service active execute test"
+    for server in config['servers']:
+        if server['active']:
+            for service in server['services']:
+                if service['active']:
 
-#print(config)
+                    if os.path.exists(service['data_folder']):
 
-request_number=1
-requests_start = time.time()
+                        for root, dirs, files in os.walk(service['data_folder']):
+                            for filename in fnmatch.filter(files, '*.csv'):
+                                full_path = os.path.join(root, filename)
+                                with open(full_path) as data_file:
+                                    request_response = send_data(encrypt_data(data_file.name, server), server['server'] +
+                                                       service['service'], request_id=request_number)
 
-for server in config['servers']:
-    if server['active']:
-        for service in server['services']:
-            if service['active']:
+                                    report.append_data(request_response, group=service['group_id'])
 
-                if os.path.exists(service['data_folder']):
+                                    request_number += 1
+                    else:
+                        print("Directory does not exists {1} service: {0}".format(service['service_name'], service['data_folder']))
 
-                    for root, dirs, files in os.walk(service['data_folder']):
-                        for filename in fnmatch.filter(files, '*.csv'):
-                            full_path = os.path.join(root, filename)
-                            with open(full_path) as data_file:
-                                report.append_data((send_data(encrypt_data(data_file.name, server), server['server'] +
-                                                   service['service'], request_id=request_number)),
-                                                   group=service['group_id'])
-                                request_number = request_number + 1
                 else:
-                    print("Directory does not exists {1} service: {0}".format(service['service_name'], service['data_folder']))
+                    continue
 
-            else:
-                continue
+    report.report_finish(time.time() - requests_start)
+    with open('./report/hsreport.html', 'w') as report_file:
+        report_file.write(report.execute_report())
 
-report.report_finish(time.time() - requests_start)
-with open('./report/hsreport.html', 'w') as report_file:
-    report_file.write(report.execute_report())
-
-
-filename = 'file:///' + os.getcwd() + '/report' + '/hsreport.html'
-webbrowser.open_new_tab(filename)
+    filename = 'file:///' + os.getcwd() + '/report' + '/hsreport.html'
+    webbrowser.open_new_tab(filename)
+    return
 
 
-#try:
-#    pass
-        #except Exception as e:
-        #app.logger.error('Error reading bd : {}'.format(e))
-#except:
-#    pass
-
-#finally:
-#    pass
+if __name__ == '__main__':
+    main()

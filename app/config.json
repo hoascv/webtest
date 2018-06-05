@@ -116,6 +116,8 @@
 
 		],
 
-	"report_folder":"./report"
+	"report_folder":"./report",
+	"vsu_number":1,
+	"dats_number":1
 
 }
