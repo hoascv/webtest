@@ -1,14 +1,11 @@
 from threading import Thread
 import threading
-import time
 import logging
-from random import randint
 import json
 import os
 import fnmatch
 import requests
 import webbrowser
-import time
 from app.RSAHelper import RSAHelper
 from app.AESHelper import AESHelper
 from app.Report import HelperReport
@@ -71,8 +68,8 @@ class DATS(Thread):
         start = time.time()
 
            #teste
-        if threading.current_thread().name == 'DATS00001' :
-            time.sleep(5)
+
+
 
         headers = {'Content-type': 'application/json', 'Accept': 'application/json',
                    'Authorization': 'Basic ZGVtbzpkZW1v'}
@@ -92,7 +89,7 @@ class DATS(Thread):
         # print("Response from server: {}".format(my_request.text))
         return {'service': service, 'time': round(my_request.elapsed.total_seconds() * 1000, 2),
                 'message': my_request.text,
-                'status_code': my_request.status_code, 'size': sys.getsizeof(data), 'filename': data['FileName'],
+                'status_code': my_request.status_code, 'size': my_request.headers['Content-Length'], 'filename': data['FileName'],
                 'request_id': request_id}
 
     def process(self):
@@ -122,15 +119,27 @@ class DATS(Thread):
                                 for filename in fnmatch.filter(files, '*.csv'):
                                     full_path = os.path.join(root, filename)
                                     with open(full_path) as data_file:
-                                        request_response = self.send_data(self.encrypt_data(data_file.name, server),
+                                        try:
+                                            request_response = self.send_data(self.encrypt_data(data_file.name, server),
                                                                           server['server'] +
-                                                                          service['service'], request_id=threading.current_thread().name + '[' + str(request_number) +']')
+                                                                          service['service'],
+                                                                          request_id=threading.current_thread().name +
+                                                                                     '[' + str(request_number) +']')
 
-                                        #
-                                        lock.acquire()
-                                        report.append_data(request_response, group=service['group_id'])
-                                        lock.release()
-                                        request_number += 1
+
+
+                                            lock.acquire()
+                                            report.append_data(request_response, group=service['group_id'])
+
+                                            lock.release()
+
+                                            request_number += 1
+
+                                        except requests.ConnectTimeout:
+                                            logging.error('Time out error!')
+                                        except requests.ConnectionError:
+                                            logging.error('Connection error!')
+
                         else:
                             logging.ERROR("Directory does not exists {1} service: {0}".format(service['service_name'],
                                                                                               service['data_folder']))
@@ -150,12 +159,16 @@ class DATS(Thread):
 
 def main():
     requests_start = time.time()
+    threads = []
 
-    for i in range(2):
-        t_worker = DATS(name='DATS' + str(i).zfill(4), dats_id="0001C0099AEA", kwargs={'vsu': 'a44e311e1bcc'})
-        t_worker.start()
+    for i in range(1):
+        threads.append(DATS(name='DATS' + str(i).zfill(4), dats_id="0001C0099AEA", kwargs={'vsu': 'a44e311e1bcc'}))
 
-    t_worker.join()
+    for x in threads:
+        x.start()
+
+    for x in threads:
+        x.join()
 
     report.report_finish(time.time() - requests_start)
     with open('./report/hsreport.html', 'w') as report_file:

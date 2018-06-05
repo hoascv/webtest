@@ -3,19 +3,32 @@
 <head>
 	<link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
-    <title>Title</title>
-    <h1>{{ data.report }} </h1>
-    <h4>Generated at: {{ date }}  Duration: {{finish}} segs</h4>
+    <title>HS REPORT</title>
+
+
+{% macro increment(dct, key, inc=1)%}
+    {% if dct.update({key: dct[key] + inc}) %} {% endif %}
+
+
+{% endmacro %}
+
+{% set requests = { 'service_values':[] , 'vsu_health_values':[] , 'dats_health_values':[] ,'total':0 }    %}
+
 
 </head>
+
 <body>
+<h1>{{ data.report }} </h1>
+    <h4>Generated at: {{ date }}  Duration: {{finish}} segs  </h4>
+
+
 {% for index in range(size) %}
     {% if index == 0 %}
         <table id="table1" class="container">
              <thead>
                 <tr>
                     <th>Feature service</th>
-                    <th>File size</th>
+                    <th>Cont-Lenght</th>
                     <th>Response time (ms)</th>
                     <th>Status code</th>
                     <th>Request id</th>
@@ -24,7 +37,10 @@
             </thead>
 
             <tbody>
-            {% for row in data['service'][index]['content'] %}
+           {% for row in data['service'][index]['content'] %}
+                {{ increment(requests, 'total') }}
+                {% if requests['service_values'].append(row.time) %} {% endif %}
+
                 <tr>
                   <td>{{ row.service }}</td>
                   <td>{{row.size}}</td>
@@ -37,14 +53,24 @@
 
              </tbody>
       </table>
-        <br>
+
+      <div>
+          {% if  requests['service_values'] |length   > 0 %}
+                    <p> Feature Service : {{ requests['service_values'] | length}} requests  Max: {{requests['service_values']| max }} ms   Min: {{requests['service_values']| min }} ms
+                        AVG: {{( requests['service_values']| sum ) /(requests['service_values']| length)|round}} ms </p>
+        
+          {% endif %}
+
+      </div>
     {% endif %}
+        <br>
+
     {% if index == 1 %}
         <table id="table2" class="container">
              <thead>
                 <tr>
                     <th>Health service (VSU)</th>
-                    <th>File size</th>
+                    <th>Cont-Lenght</th>
                     <th>Response time (ms)</th>
                     <th>Status code</th>
                      <th>Request id</th>
@@ -53,7 +79,10 @@
             </thead>
 
             <tbody>
+
             {% for row in data['service'][index]['content'] %}
+            {{ increment(requests, 'total') }}
+            {% if requests['vsu_health_values'].append(row.time) %} {% endif %}
                 <tr>
                   <td>{{row.service}} </td>
                   <td>{{row.size}}</td>
@@ -66,13 +95,22 @@
 
              </tbody>
       </table>
+
+      <div>
+          {% if requests['vsu_health_values'] |length   > 0 %}
+                <p> VSU Health Service : {{ requests['vsu_health_values'] |length }} requests Max: {{requests['vsu_health_values']| max }} ms Min: {{requests['vsu_health_values']| min }} ms
+                    AVG: {{( requests['vsu_health_values']| sum ) /(requests['vsu_health_values']| length)|round}} </p>
+          {% endif %}
+
+      </div>
     {% endif %}
+
     {% if index == 2 %}
         <table id="table3" class="container">
              <thead>
                 <tr>
                     <th>Health Service (DATS)</th>
-                    <th>File Size</th>
+                    <th>Cont-Lenght</th>
 
                     <th>Response time (ms)</th>
                     <th>Status code</th>
@@ -83,6 +121,8 @@
 
             <tbody>
             {% for row in data['service'][index]['content'] %}
+             {{ increment(requests, 'total') }}
+            {% if requests['dats_health_values'].append(row.time) %} {% endif %}
                 <tr>
                   <td>{{ row.service }}</td>
                   <td>{{row.size}}</td>
@@ -95,11 +135,22 @@
 
              </tbody>
       </table>
-    {% endif %}
 
+
+        {% if  requests['dats_health_values'] |length   > 0 %}
+            <p> DATS Health Service : {{ requests['dats_health_values']  |length  }} requests Max: {{requests['dats_health_values']| max }} ms Min: {{requests['dats_health_values']| min }} ms
+            AVG: {{( requests['dats_health_values']| sum ) /(requests['dats_health_values']| length)|round}} </p>
+        {% endif %}
+     {% endif %}
 
 {% endfor %}
 
+<h3>
+    Total Request: {{ requests['total']}}
+
+</h3>
 </body>
 </html>
+
+
 

@@ -4,8 +4,12 @@ import tempfile
 import OpenSSL
 from Crypto.Signature import PKCS1_v1_5
 import base64
+import logging
 from Crypto.Hash import SHA512, SHA384, SHA256, SHA, MD5
+import os
 
+logging.basicConfig(level=logging.DEBUG,
+                    format='(%(threadName)-9s) %(message)s',)
 
 class RSAHelper(object):
     #def __init__(self, server_certificate, client_key):
@@ -15,16 +19,24 @@ class RSAHelper(object):
     #    with open(client_key, 'r') as key:
     #        self.privateKey = RSA.importKey(key.read(), passphrase='')
     def __init__(self, pfx_certificate, pfx_password, server_certificate_path, client_key_path):
-        server_certificate = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
+        if not os.path.exists(pfx_certificate):
+            logging.error("pfx certificate does not exist")
+            return
+        else:
+            server_certificate = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
                                                              open(server_certificate_path).read())
 
-        cert_der = OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_ASN1, server_certificate)
-        self.recipient_public_key = RSA.import_key(cert_der)
+            cert_der = OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_ASN1, server_certificate)
+            self.recipient_public_key = RSA.import_key(cert_der)
 
-        with open(client_key_path) as private_key:  # testing not working for private key from pem format
-            self.temp_client_key = OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, private_key.read(), str.encode(pfx_password))
-            self.client_key = OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_ASN1, self.temp_client_key)
-            #print(base64.b64encode(self.client_key))
+        if not os.path.exists(client_key_path):
+            logging.error("client private key certificate does not exist")
+        else:
+
+            with open(client_key_path) as private_key:  # testing not working for private key from pem format
+                self.temp_client_key = OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, private_key.read(), str.encode(pfx_password))
+                self.client_key = OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_ASN1, self.temp_client_key)
+                #print(base64.b64encode(self.client_key))
 
         with tempfile.NamedTemporaryFile(suffix='.pem', delete=False) as t_pem:  #pfx format
             f_pem = open(t_pem.name, 'wb')
