@@ -86,7 +86,7 @@ class DATS(Thread):
         # print("Response from server: {}".format(my_request.text))
         return {'service': service, 'time': round(my_request.elapsed.total_seconds() * 1000, 2),
                 'message': my_request.text,
-                'status_code': my_request.status_code, 'size': 0, 'filename': data['FileName'],
+                'status_code': my_request.status_code, 'size': my_request.headers['content-length'], 'filename': data['FileName'],
                 'request_id': request_id}
 
     def process(self):
