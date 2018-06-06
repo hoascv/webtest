@@ -10,7 +10,6 @@ from app.RSAHelper import RSAHelper
 from app.AESHelper import AESHelper
 from app.Report import HelperReport
 import base64
-import sys
 import time
 
 
@@ -148,8 +147,14 @@ def main():
     requests_start = time.time()
     threads = []
 
-    for i in range(1):
-        threads.append(DATS(name='DATS' + str(i).zfill(4), dats_id="0001C0099AEA", kwargs={'vsu': 'a44e311e1bcc'}))
+    _vsu = ['843a4b936ad0', 'a44e311e1bec', '183da23022e4', 'a44e311e24f4', 'a44e311e189c', 'a44e311e16c4', 'a44e311e2b70', 'a44e311e2c24', 'a44e311e1ffc', 'a44e311e14a0', 'a44e311e2030']
+    _dats = ['0001C0099A3E', '0001C0099A62', '0001C0099AEA', '0010F33BEEAB', '0010F34A1AAD', '0010F34DC14B', '0010F34DE3FA', '0010F351359A']
+
+
+
+
+    for i in range(len(_dats)):
+        threads.append(DATS(name='DATS' + str(i).zfill(4), dats_id=_dats.pop(), kwargs={'vsu': _vsu.pop()}))
 
     for x in threads:
         x.start()
