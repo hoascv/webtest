@@ -55,21 +55,18 @@ class DATS(Thread):
 
 
 
-        with open('data.txt', 'w') as outfile:
+        with open('data.json', 'w') as outfile:
             json.dump(payload, outfile)
 
-        #with open('data.txt') as config_file:
+        #with open('data.json') as config_file:
         #    new_json = json.load(config_file)
 
         #return json.dumps(payload)
         return payload
 
+
     def send_data(self, data, service, request_id):
         start = time.time()
-
-           #teste
-
-
 
         headers = {'Content-type': 'application/json', 'Accept': 'application/json',
                    'Authorization': 'Basic ZGVtbzpkZW1v'}

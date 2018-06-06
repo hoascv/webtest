@@ -1,9 +1,0 @@
-{"id": 68330.0,
- "rdate": "2018-05-19T08:10:07+00:00",
- "sensor": "pressure_sensor1",
- "sensorLocation": "livingroom",
- "sensorType": "BMP180",
- "value": 102018.0,
- "file":"data1.json",
- "test":0
-}

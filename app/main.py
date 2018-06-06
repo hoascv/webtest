@@ -38,10 +38,10 @@ def encrypt_data(filename, server):
 
 
 
-    with open('data.txt', 'w') as outfile:
+    with open('data.json', 'w') as outfile:
         json.dump(payload, outfile)
 
-    #with open('data.txt') as config_file:
+    #with open('data.json') as config_file:
     #    new_json = json.load(config_file)
 
     #return json.dumps(payload)
