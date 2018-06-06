@@ -75,17 +75,17 @@ class DATS(Thread):
 
         finish = time.time() - start
 
-        print('status {} time elapsed {} (ms)  total time: {} message {} Request id {} filename {}'.format(
+        print('status {} time elapsed {} (ms)  total time: {} message {} Request id {} filename {} dats_id :{}'.format(
             my_request.status_code,
             round(my_request.elapsed.total_seconds() * 1000, 2),
-            round(finish * 1000, 2), my_request.text, request_id, data['FileName']))
+            round(finish * 1000, 2), my_request.text,request_id, data['FileName'], self.dats_id ))
         # elapsed measures the time between sending the request and finishing parsing the response headers,
         # not until the full response has been transferred.
 
         # print("Response from server: {}".format(my_request.text))
         return {'service': service, 'time': round(my_request.elapsed.total_seconds() * 1000, 2),
                 'message': my_request.text,
-                'status_code': my_request.status_code, 'size': my_request.headers['content-length'], 'filename': data['FileName'],
+                'status_code': my_request.status_code, 'size': 0, 'filename': data['FileName'],
                 'request_id': request_id}
 
     def process(self):
@@ -147,11 +147,44 @@ def main():
     requests_start = time.time()
     threads = []
 
-    _vsu = ['843a4b936ad0', 'a44e311e1bec', '183da23022e4', 'a44e311e24f4', 'a44e311e189c', 'a44e311e16c4', 'a44e311e2b70', 'a44e311e2c24', 'a44e311e1ffc', 'a44e311e14a0', 'a44e311e2030']
-    _dats = ['0001C0099A3E', '0001C0099A62', '0001C0099AEA', '0010F33BEEAB', '0010F34A1AAD', '0010F34DC14B', '0010F34DE3FA', '0010F351359A']
+    _vsu = [
+        '843a4b936ad0',
+        'a44e311e1bec',
+        '183da23022e4',
+        'a44e311e24f4',
+        'a44e311e189c',
+        'a44e311e16c4',
+        'a44e311e2b70',
+        'a44e311e2c24',
+        'a44e311e1ffc',
+        'a44e311e14a0',
+        'a44e311e2030',
+        'a44e311e2cf8',
+        'a44e311e24c0',
+        'a44e311e1430',
+        'a44e311e2a90',
+        'a44e311e2480',
+        'a44e311e29dc',
+        'a44e311e27d4',
+        'a44e311e1904',
+        'a44e311e23f8',
+        'a44e311e2134',
+        'a44e311e22a0',
+        'a44e311e16e8',
+        'a44e311e21c8',
+        'a44e311e18a4',
+        'a44e311e1bcc',
+        'test1',
+        'test2',
+        'test3',
+        'test4',
 
+    ]
 
-
+    _dats = ['0001C0099A3E', '0001C0099A62', '0001C0099AEA', '0010F33BEEAB', '0010F34A1AAD', '0010F34DC14B',
+             '0010F34DE3FA', '0010F351359A', 'DatsId1', 'DatsId2', 'DatsId3', 'DatsId4', 'DatsId5', 'DatsId0',
+             'DatsId11', 'DatsId12', 'DatsId13', 'DatsId14', 'DatsId15', 'DatsId16', 'DatsId17', 'DatsId18', 'DatsId19',
+             'DatsId6', 'DatsId7', 'DatsId8', 'DatsId9', 'DatsId10', 'DatsId21','DatsId20']
 
     for i in range(len(_dats)):
         threads.append(DATS(name='DATS' + str(i).zfill(4), dats_id=_dats.pop(), kwargs={'vsu': _vsu.pop()}))
