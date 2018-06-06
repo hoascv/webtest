@@ -4,6 +4,7 @@ hsvenv/
 app/__pycache__/
 app/certificates/
 __pycache__/
+report/hsreport.html
 
 
 
