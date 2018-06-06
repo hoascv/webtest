@@ -89,7 +89,7 @@ class DATS(Thread):
         # print("Response from server: {}".format(my_request.text))
         return {'service': service, 'time': round(my_request.elapsed.total_seconds() * 1000, 2),
                 'message': my_request.text,
-                'status_code': my_request.status_code, 'size': my_request.headers['Content-Length'], 'filename': data['FileName'],
+                'status_code': my_request.status_code, 'size': 0, 'filename': data['FileName'],
                 'request_id': request_id}
 
     def process(self):
@@ -98,15 +98,8 @@ class DATS(Thread):
         with open('config.json') as config_file:
             config = json.load(config_file)
 
-
-
-
-
         "if the service active execute test"
-
-
         request_number=1
-
 
         for server in config['servers']:
             if server['active']:
@@ -120,16 +113,13 @@ class DATS(Thread):
                                     full_path = os.path.join(root, filename)
                                     with open(full_path) as data_file:
                                         try:
-                                            request_response = self.send_data(self.encrypt_data(data_file.name, server),
-                                                                          server['server'] +
-                                                                          service['service'],
-                                                                          request_id=threading.current_thread().name +
-                                                                                     '[' + str(request_number) +']')
-
-
+                                            req_response = self.send_data(self.encrypt_data(data_file.name, server),
+                                                                              server['server'] + service['service'],
+                                                                              request_id=threading.current_thread().name +
+                                                                                     '[' + str(request_number) + ']')
 
                                             lock.acquire()
-                                            report.append_data(request_response, group=service['group_id'])
+                                            report.append_data(req_response, group=service['group_id'])
 
                                             lock.release()
 

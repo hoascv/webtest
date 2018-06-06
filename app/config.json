@@ -75,7 +75,7 @@
 
 				},
 			 {
-				"active":true,
+				"active":false,
 				"server_name": "TOILET SERVICE",
 				"server": "http://ptsv2.com",
 				"services":
