@@ -55,21 +55,18 @@ class DATS(Thread):
 
 
 
-        with open('data.txt', 'w') as outfile:
+        with open('data.json', 'w') as outfile:
             json.dump(payload, outfile)
 
-        #with open('data.txt') as config_file:
+        #with open('data.json') as config_file:
         #    new_json = json.load(config_file)
 
         #return json.dumps(payload)
         return payload
 
+
     def send_data(self, data, service, request_id):
         start = time.time()
-
-           #teste
-
-
 
         headers = {'Content-type': 'application/json', 'Accept': 'application/json',
                    'Authorization': 'Basic ZGVtbzpkZW1v'}
@@ -98,15 +95,8 @@ class DATS(Thread):
         with open('config.json') as config_file:
             config = json.load(config_file)
 
-
-
-
-
         "if the service active execute test"
-
-
         request_number=1
-
 
         for server in config['servers']:
             if server['active']:
@@ -120,16 +110,13 @@ class DATS(Thread):
                                     full_path = os.path.join(root, filename)
                                     with open(full_path) as data_file:
                                         try:
-                                            request_response = self.send_data(self.encrypt_data(data_file.name, server),
-                                                                          server['server'] +
-                                                                          service['service'],
-                                                                          request_id=threading.current_thread().name +
-                                                                                     '[' + str(request_number) +']')
-
-
+                                            req_response = self.send_data(self.encrypt_data(data_file.name, server),
+                                                                              server['server'] + service['service'],
+                                                                              request_id=threading.current_thread().name +
+                                                                                     '[' + str(request_number) + ']')
 
                                             lock.acquire()
-                                            report.append_data(request_response, group=service['group_id'])
+                                            report.append_data(req_response, group=service['group_id'])
 
                                             lock.release()
 
