@@ -25,7 +25,7 @@ pyparsing==2.2.0
 pytz==2018.4
 PyYAML==5.1
 requests==2.20.0
-rsa==3.4.2
+rsa==4.1
 shellescape==3.4.1
 six==1.11.0
 snowballstemmer==1.2.1
