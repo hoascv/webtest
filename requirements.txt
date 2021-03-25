@@ -23,7 +23,7 @@ PyNaCl==1.2.1
 pyOpenSSL==18.0.0
 pyparsing==2.2.0
 pytz==2018.4
-PyYAML==5.1
+PyYAML==5.4
 requests==2.20.0
 rsa==3.4.2
 shellescape==3.4.1
